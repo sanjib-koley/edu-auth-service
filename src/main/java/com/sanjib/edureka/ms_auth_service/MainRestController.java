@@ -25,14 +25,11 @@ public class MainRestController
     @PostMapping("signup")
     public ResponseEntity<String> signup(@RequestBody CredentialView credentialView)
     {
-        // validate the credential [email and phone]
-        // persist the credential in the database
         Credential credential = new Credential();
-        credential.setId((long) (Math.random()*10000000));
         credential.setEmail(credentialView.getEmail());
         credential.setPhone(credentialView.getPhone());
         credential.setPassword(credentialView.getPassword());
-        // persist credential into the database
+        credential.setUsertype(credentialView.getUsertype());
         credentialRepository.save(credential);
 
         return ResponseEntity.ok("Credential saved successfully!");
@@ -49,6 +46,8 @@ public class MainRestController
             {
                 String tokenValue = String.valueOf(new Random().nextInt(900000000));
                 response.addHeader("Authorization",tokenValue);
+                response.addHeader("Usertype",credential.getUsertype());
+                
                 Token token = new Token();
                 token.setToken(tokenValue);
                 token.setUserid(credential.getId());
@@ -68,6 +67,7 @@ public class MainRestController
             {
                 String tokenValue = String.valueOf(new Random().nextInt(900000000));
                 response.addHeader("Authorization",tokenValue);
+                response.addHeader("Usertype",credential.getUsertype());
                 Token token = new Token();
                 token.setToken(tokenValue);
                 token.setUserid(credential.getId());

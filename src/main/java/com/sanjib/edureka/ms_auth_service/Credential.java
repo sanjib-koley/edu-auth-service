@@ -4,6 +4,8 @@ package com.sanjib.edureka.ms_auth_service;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
@@ -15,7 +17,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "credentials")
 public class Credential {
-    @Id
+    
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -30,5 +34,10 @@ public class Credential {
     @Size(max = 20)
     @Column(name = "password", length = 20)
     private String password;
+    
+    // customer,seller,admin
+    @Size(max = 10)
+    @Column(name = "usertype", length = 10)
+    private String usertype;
 
 }
