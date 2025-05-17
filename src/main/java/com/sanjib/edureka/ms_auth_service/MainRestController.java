@@ -113,6 +113,31 @@ public class MainRestController
         }
 
     }
+    
+	@GetMapping("loggedinuser")
+	public ResponseEntity<?> loggedInUser(@RequestHeader("Authorization") String token) {
+		Token tokenData = null;
+		Long userId = 0L;
+		log.info("Validate Token request received with Token: {}", token);
+
+		if (tokenRepository.existsByToken(token)) {
+			log.info("Token exists in the database");
+
+			tokenData = tokenRepository.findById(token).get();
+
+			if (tokenData.getStatus().equals("ACTIVE")) {
+				userId = tokenData.getUserid();
+				return ResponseEntity.ok(userId);
+			} else {
+				log.info("Token is inactive");
+				return ResponseEntity.badRequest().body("Invalid Request");
+			}
+		} else {
+			log.info("Token does not exist in the database");
+			return ResponseEntity.badRequest().body("Invalid Request");
+		}
+
+	}
 
     @PostMapping("logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token)
